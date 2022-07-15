@@ -165,7 +165,7 @@ add_head (hn_t** head, const node_t node)
  * \return node of interesting
  */
 static tn_t*
-add_tail (tn_t** tail, hn_t* head, const node_t node, const uint eref)
+add_tail (tn_t** tail, hn_t* head, const node_t node, const unsigned int eref)
 {
   tn_t* tmp;
   tmp = *tail;

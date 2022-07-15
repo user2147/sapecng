@@ -95,7 +95,7 @@ void*
 xcalloc (const size_t num, const size_t size)
 {
   void* new = xmalloc(num * size);
-  bzero(new, num * size);
+  BZERO(new, num * size);
   return new;
 }
 

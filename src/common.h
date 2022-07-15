@@ -82,7 +82,7 @@ extern int errno;
 #if !HAVE_BZERO && HAVE_MEMSET
 # define bzero(buf, bytes) ((void) memset (buf, 0, bytes))
 #endif
-
+# define BZERO(buf, bytes) ((void) memset (buf, 0, bytes))
 
 // Flags (Environment Management)
 

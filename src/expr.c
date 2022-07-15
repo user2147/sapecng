@@ -164,7 +164,7 @@ splash (expr_t* elist, FILE* fref, const int mode)
   if(elist != NULL) {
     while(elist != NULL) {
       if(degree != -1) {
-	if(mode) fprintf(fref, " + (");
+  if(mode) fprintf(fref, " + (");
 	else length += 4;
       } else {
 	if(mode) fprintf(fref, " (");

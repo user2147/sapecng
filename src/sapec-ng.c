@@ -134,6 +134,23 @@ resolve (const char* ifile)
         splash((expr_t*) yrefchain, fref, 1);
         fclose(fref);
       }
+      /////////////// output python function file /////////////////////////////
+      buf[length] = '\0';
+      strcat(buf, ".py");
+      if((fref = fopen(buf, "w")) != NULL) {
+	      VERBOSE(".");
+        ul = splash((expr_t*) grefchain, NULL, 0);
+        dl = splash((expr_t*) yrefchain, NULL, 0);
+        fprintf(fref, "(");
+        splash((expr_t*) grefchain, fref, 1);
+        fprintf(fref, ")");
+        fprintf(fref, "/\n");
+        fprintf(fref, "(");
+        splash((expr_t*) yrefchain, fref, 1);
+        fprintf(fref, ")");
+        fclose(fref);
+      }
+      //////////////////////////////////////////////////////////////////////
       buf[length] = '\0';
       strcat(buf, ".fdt");
       if((fref = fopen(buf, "wb")) != NULL) {

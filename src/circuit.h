@@ -137,7 +137,7 @@ struct tail_node
   tn_t* prev;  /**< Previous in the %list */
   hn_t* head;  /**< Head (tail of %edge) reference */
   node_t node;  /**< Node identifier */
-  uint edge;  /**< Related %edge identifier */
+  unsigned int edge;  /**< Related %edge identifier */
 };
 
 /**
