@@ -139,14 +139,12 @@ resolve (const char* ifile)
       strcat(buf, ".py");
       if((fref = fopen(buf, "w")) != NULL) {
 	      VERBOSE(".");
-        ul = splash((expr_t*) grefchain, NULL, 0);
-        dl = splash((expr_t*) yrefchain, NULL, 0);
         fprintf(fref, "(");
-        splash((expr_t*) grefchain, fref, 1);
+        splash_python((expr_t*) grefchain, fref);
         fprintf(fref, ")");
-        fprintf(fref, "/\n");
+        fprintf(fref, "/  # large fraction bar, separating numerator from denominator\n");
         fprintf(fref, "(");
-        splash((expr_t*) yrefchain, fref, 1);
+        splash_python((expr_t*) yrefchain, fref);
         fprintf(fref, ")");
         fclose(fref);
       }

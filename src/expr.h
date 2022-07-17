@@ -84,6 +84,9 @@ extern int
 splash (expr_t*, FILE*, const int);
 
 extern int
+splash_python (expr_t*, FILE*);
+
+extern int
 expr_to_file (const expr_t*, FILE*);
 
 extern expr_t*

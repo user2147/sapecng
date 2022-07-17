@@ -198,6 +198,125 @@ splash (expr_t* elist, FILE* fref, const int mode)
 }
 
 /**
+ * \brief It splashes a single degree-group
+ *
+ * This is an helpful function used to splash one degree-group at a time.
+ * \param elist %list of expressions
+ * \param fref output file
+ * \param buf pre-allocated buffer
+ * \return the length of the splashed expression
+ */
+static int splash_group_python (expr_t** elist, FILE* fref, char* buf) {
+  expr_t* iter;
+  list_t* ehook;
+  int degree;
+  int length;
+  int zero;
+  double unl;
+  double acc;
+
+  length = 0;
+  acc = 0;
+  zero = 1;
+  iter = *elist;
+  degree = iter->degree;
+
+  while ((iter != NULL) && (iter->degree == degree)) {
+    if (iter->vpart != 0) {
+      zero = 0;
+      if (iter->epart == NULL) {
+	      acc += iter->vpart;
+      } else {
+        if (iter->vpart > 0) {
+          fprintf(fref, " +");
+        } else {
+          fprintf(fref, " -");
+        }
+        if ((iter->vpart != 1) && (iter->vpart != -1)) {
+          unl = iter->vpart;
+          if (unl < 0){
+            unl *= -1;
+          }
+          fprintf(fref, " %.3g", unl);
+          if (iter->epart != NULL) { //is a symbolic element following?
+            fprintf(fref, " *");
+          }
+        }
+        ehook = iter->epart;
+        while (ehook != NULL) {
+          fprintf(fref, " %s", list_data(char, ehook));
+          ehook = list_next(ehook);
+          if (ehook != NULL) { //prevents "*" when last symbolic element in group
+            fprintf(fref, " *");
+          }
+        }
+      }
+    }
+    iter = list_next_entry(expr_t, iter);
+  }
+  *elist = iter;
+  if ((acc != 0) || (zero)) {
+    if (acc < 0) {
+      fprintf(fref, " -");
+      acc *= -1;
+    } else {
+      fprintf(fref, " +");
+    }
+    fprintf(fref, " %.3g", acc);
+  }
+  return length;
+}
+
+/**
+ * \brief It splashes an expressions %list readable by python code
+ *
+ * This function can be used to splash a %list of expressions in a correct
+ * manner and/or to know the splashed representation's length; it produces
+ * something like "expr1 + ... + exprN", where exprX is like
+ * "vpart * epart1 * ... * epartM * s^degree" (vpart, epart, degree are all
+ * fields of %struct %expr).
+ *
+ * \param elist %list of expressions
+ * \param fref output file
+ * \return the length of the splashed expression
+ */
+int splash_python (expr_t* elist, FILE* fref) {
+  int degree;
+  int length;
+  char* buf;
+
+  length = 0;
+  degree = -1;
+  buf = 0;
+
+  if (elist != NULL) {
+    while (elist != NULL) {
+      if (degree != -1) {
+        fprintf(fref, " + (");
+      } else {
+        fprintf(fref, " (");
+      }
+      degree = elist->degree;
+      length += splash_group_python(&elist, fref, buf);
+      fprintf(fref, " )");
+      if (degree != 0) {
+	      fprintf(fref, " * s");
+        if (degree > 1) {
+          fprintf(fref, "**%d", degree);
+        }
+      }
+    }
+  } else {
+    fprintf(fref, " NULL");
+  }
+  ++length;
+  fprintf(fref, "\n");
+  XFREE(buf);
+  return length;
+}
+
+
+/**
  * \brief How to put an expression on file.
  *
  * It permits to copy an expression directly to file, handling correctly the
